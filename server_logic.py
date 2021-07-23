@@ -8,7 +8,6 @@ We have started this for you, with a function to help remove the 'neck' directio
 from the list of possible moves!
 """
 
-
 def avoid_my_neck(my_head: Dict[str, int], my_body: List[dict], possible_moves: List[str]) -> List[str]:
     """
     my_head: Dictionary of x/y coordinates of the Battlesnake head.
@@ -34,6 +33,20 @@ def avoid_my_neck(my_head: Dict[str, int], my_body: List[dict], possible_moves: 
     return possible_moves
 
 
+def stay_in_bounds(my_head: Dict[str, int], board_height, board_width , possible_moves: List[str]) -> List[str]:
+
+    if my_head["x"] == 0:
+        possible_moves.remove("left")
+    elif my_head["y"] == 0:
+        possible_moves.remove("up")
+    elif my_head["x"] == board_width:
+        possible_moves.remove("right")
+    elif my_head["y"] == board_height:
+        possible_moves.remove("down")
+
+    return possible_moves
+
+
 def choose_move(data: dict) -> str:
     """
     data: Dictionary of all Game Board data as received from the Battlesnake Engine.
@@ -50,10 +63,10 @@ def choose_move(data: dict) -> str:
     my_body = data["you"]["body"]  # A list of x/y coordinate dictionaries like [ {"x": 0, "y": 0}, {"x": 1, "y": 0}, {"x": 2, "y": 0} ]
 
     # TODO: uncomment the lines below so you can see what this data looks like in your output!
-    # print(f"~~~ Turn: {data['turn']}  Game Mode: {data['game']['ruleset']['name']} ~~~")
-    # print(f"All board data this turn: {data}")
-    # print(f"My Battlesnakes head this turn is: {my_head}")
-    # print(f"My Battlesnakes body this turn is: {my_body}")
+    print(f"~~~ Turn: {data['turn']}  Game Mode: {data['game']['ruleset']['name']} ~~~")
+    print(f"All board data this turn: {data}")
+    print(f"My Battlesnakes head this turn is: {my_head}")
+    print(f"My Battlesnakes body this turn is: {my_body}")
 
     possible_moves = ["up", "down", "left", "right"]
 
@@ -61,10 +74,13 @@ def choose_move(data: dict) -> str:
     possible_moves = avoid_my_neck(my_head, my_body, possible_moves)
 
     # TODO: Using information from 'data', find the edges of the board and don't let your Battlesnake move beyond them
-    # board_height = ?
-    # board_width = ?
+    board_height = data['board']['height']
+    board_width = data['board']['width']
+
+    possible_moves = stay_in_bounds(my_head, board_height, board_width, possible_moves)
 
     # TODO Using information from 'data', don't let your Battlesnake pick a move that would hit its own body
+
 
     # TODO: Using information from 'data', don't let your Battlesnake pick a move that would collide with another Battlesnake
 
