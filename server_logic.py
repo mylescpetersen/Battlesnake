@@ -8,6 +8,7 @@ We have started this for you, with a function to help remove the 'neck' directio
 from the list of possible moves!
 """
 
+
 def avoid_my_neck(my_head: Dict[str, int], my_body: List[dict], possible_moves: List[str]) -> List[str]:
     """
     my_head: Dictionary of x/y coordinates of the Battlesnake head.
@@ -47,6 +48,26 @@ def stay_in_bounds(my_head: Dict[str, int], board_height, board_width , possible
     return possible_moves
 
 
+def dont_hit_body(my_head: Dict[str, int], my_body: List[dict], possible_moves: List[str]) -> List[str]:
+
+    up = {my_head['x'], my_head['y'] + 1}
+    left = {my_head['x'] - 1, my_head['y']}
+    down = {my_head['x'], my_head['y'] - 1}
+    right = {my_head['x'] + 1, my_head['y']}
+
+    for coord in my_body:
+        if up == coord:
+            possible_moves.remove("up")
+        if left == coord:
+            possible_moves.remove("left")
+        if down == coord:
+            possible_moves.remove("down")
+        if right == coord:
+            possible_moves.remove("right")
+
+    return possible_moves
+
+
 def choose_move(data: dict) -> str:
     """
     data: Dictionary of all Game Board data as received from the Battlesnake Engine.
@@ -81,6 +102,7 @@ def choose_move(data: dict) -> str:
 
     # TODO Using information from 'data', don't let your Battlesnake pick a move that would hit its own body
 
+    possible_moves = dont_hit_body(my_head, my_body, possible_moves)
 
     # TODO: Using information from 'data', don't let your Battlesnake pick a move that would collide with another Battlesnake
 
