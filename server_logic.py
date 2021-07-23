@@ -38,11 +38,11 @@ def stay_in_bounds(my_head: Dict[str, int], board_height, board_width , possible
     if my_head["x"] == 0:
         possible_moves.remove("left")
     if my_head["y"] == 0:
-        possible_moves.remove("up")
-    if my_head["x"] == board_width:
-        possible_moves.remove("right")
-    if my_head["y"] == board_height:
         possible_moves.remove("down")
+    if my_head["x"] == board_width - 1:
+        possible_moves.remove("right")
+    if my_head["y"] == board_height - 1:
+        possible_moves.remove("up")
 
     return possible_moves
 
