@@ -55,6 +55,11 @@ def dont_hit_body(my_head: Dict[str, int], my_body: List[dict], possible_moves: 
     down = {my_head['x'], my_head['y'] - 1}
     right = {my_head['x'] + 1, my_head['y']}
 
+    print(up,down,left,right)
+    for part in my_body:
+        print("part: " + part)
+
+
     for coord in my_body:
         if up == coord:
             possible_moves.remove("up")
@@ -85,9 +90,9 @@ def choose_move(data: dict) -> str:
 
     # TODO: uncomment the lines below so you can see what this data looks like in your output!
     print(f"~~~ Turn: {data['turn']}  Game Mode: {data['game']['ruleset']['name']} ~~~")
-    print(f"All board data this turn: {data}")
-    print(f"My Battlesnakes head this turn is: {my_head}")
-    print(f"My Battlesnakes body this turn is: {my_body}")
+    #print(f"All board data this turn: {data}")
+    print(f"My Battlesnakes head this turn is: {my_head}\n")
+    print(f"My Battlesnakes body this turn is: {my_body}\n")
 
     possible_moves = ["up", "down", "left", "right"]
 
