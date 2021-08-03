@@ -50,57 +50,65 @@ def stay_in_bounds(my_head: Dict[str, int], board_height, board_width , possible
     return possible_moves
 
 # Don't hit your own body
-def dont_hit_body(my_head: Dict[str, int], my_body: List[dict], possible_moves: List[str]) -> List[str]:
-
-    up = {'x' :my_head['x'], 'y': my_head['y'] + 1}
-    left = {'x': my_head['x'] - 1, 'y': my_head['y']}
-    down = {'x': my_head['x'], 'y': my_head['y'] - 1}
-    right = {'x': my_head['x'] + 1, 'y': my_head['y']}
+def dont_hit_body(my_body: List[dict], possible_moves: List[str]) -> List[str]:
 
     for coord in my_body:
-      # print(coord, up)
-      # print(coord, left)
-      # print(coord, down)
-      # print(coord, right)
-      if up == coord:
-        remove_move("up")
-      if left == coord:
-        remove_move("left")
-      if down == coord:
-        remove_move("down")
-      if right == coord:
-        remove_move("right")
+      # Only 4 elements
+      for direction, space in my_adj_spaces.items():
+        if space == coord:
+          remove_move(direction)
 
     return possible_moves
 
 # Prevent moving into another snakes body
-def avoid_snake_bodies(my_head: Dict[str, int], other_snakes: List[dict], possible_moves: List[str]) -> List[str]:
-
-  up = {'x' :my_head['x'], 'y': my_head['y'] + 1}
-  left = {'x': my_head['x'] - 1, 'y': my_head['y']}
-  down = {'x': my_head['x'], 'y': my_head['y'] - 1}
-  right = {'x': my_head['x'] + 1, 'y': my_head['y']}
+def avoid_snake_bodies(other_snakes: List[dict], possible_moves: List[str]) -> List[str]:
 
   for snake in other_snakes:
-    print(snake["body"])
-
     for coord in snake["body"]:
-
-      if up == coord:
-        remove_move("up")
-      if left == coord:
-        remove_move("left")
-      if down == coord:
-        remove_move("down")
-      if right == coord:
-        remove_move("right")
+      # Only 4 elements
+      for direction, space in my_adj_spaces.items():
+        if space == coord:
+          remove_move(direction)
 
 
   return possible_moves
 
 
-def avoid_snake_heads(my_head: Dict[str, int], my_body: List[dict], possible_moves: List[str]) -> List[str]:
+def avoid_snake_heads(my_head: Dict[str, int], other_snakes: List[dict], possible_moves: List[str]) -> List[str]:
   # IF TIE, GO TO BIGGER SNAKE (FOOD IS ADDED BEFORE COLLISION)
+
+  # up = {'x' :my_head['x'], 'y': my_head['y'] + 1}
+  # left = {'x': my_head['x'] - 1, 'y': my_head['y']}
+  # down = {'x': my_head['x'], 'y': my_head['y'] - 1}
+  # right = {'x': my_head['x'] + 1, 'y': my_head['y']}
+
+  for snake in other_snakes:
+    #print(snake["body"])
+    if my_length <= snake["length"]:
+      for coord in snake["body"]:
+      # Only 4 elements
+        for direction, space in my_adj_spaces.items():
+          # if space in oth
+            remove_move(direction)
+            # TODO GET OTHER SNAKE HEAD'S ADJ SQUARES
+
+  
+    # if up == snake["head"]:
+    #   remove_move("up")
+    # if left == snake["head"]:
+    #   remove_move("left")
+    # if down == snake["head"]:
+    #   remove_move("down")
+    # if right == snake["head"]:
+    #   remove_move("right")
+
+  #  for snake in other_snakes:
+  #    if (snake)
+  #   for coord in snake["body"]:
+  #     # Only 4 elements
+  #     for direction, space in adj_spaces.items():
+  #       if space == coord:
+  #         remove_move(direction)
 
 
   return possible_moves 
@@ -111,12 +119,23 @@ def dont_get_trapped(my_head: Dict[str, int], my_body: List[dict], possible_move
 
 
 
+
   return possible_moves
 
 
 
+# Gets adjacent squares given a square:
+# Returns list in order: up, down, left, right
+def get_adj_spaces(cur_space: Dict[str, int]):
+  
+  adj_up = {'x' :cur_space['x'], 'y': cur_space['y'] + 1}
+  adj_down = {'x': cur_space['x'], 'y': cur_space['y'] - 1}
+  adj_left = {'x': cur_space['x'] - 1, 'y': cur_space['y']}
+  adj_right = {'x': cur_space['x'] + 1, 'y': cur_space['y']}
+  
+  adj_squares = [adj_up, adj_down, adj_left, adj_right]
 
-
+  return adj_squares
 
 
 # ----- END BASIC MOVE DECISION: ILLEGAL MOVES -----
@@ -140,19 +159,25 @@ def choose_move(data: dict) -> str:
     with as a Python Dictionary, and contains all of the information about the Battlesnake board
     for each move of the game.
 
+    
     """
+
+    # My snake variables
+    my_health = data["you"]["health"]
+    my_length = data["you"]["length"]
+
+
+  # Create Snake object
+  # (self, health, body, head, length, shout, squad)
+  my_snake = Snake()
+
+
+
     my_head = data["you"]["head"]  # A dictionary of x/y coordinates like {"x": 0, "y": 0}
     my_body = data["you"]["body"]  # A list of x/y coordinate dictionaries like [ {"x": 0, "y": 0}, {"x": 1, "y": 0}, {"x": 2, "y": 0} ]
 
     # All other snake objects
     other_snakes = data["board"]["snakes"]
-
-    print(other_snakes)
-    # TODO: uncomment the lines below so you can see what this data looks like in your output!
-    print(f"~~~ Turn: {data['turn']}  Game Mode: {data['game']['ruleset']['name']} ~~~")
-    #print(f"All board data this turn: {data}")
-    print(f"My Battlesnakes head this turn is: {my_head}\n")
-    print(f"My Battlesnakes body this turn is: {my_body}\n")
 
     # Sets global list of move possibilities
     global possible_moves
@@ -168,6 +193,33 @@ def choose_move(data: dict) -> str:
     board_height = data['board']['height']
     board_width = data['board']['width']
 
+    
+    # Next move locations
+
+    # adj_up = {'x' :my_head['x'], 'y': my_head['y'] + 1}
+    # adj_left = {'x': my_head['x'] - 1, 'y': my_head['y']}
+    # adj_down = {'x': my_head['x'], 'y': my_head['y'] - 1}
+    # adj_right = {'x': my_head['x'] + 1, 'y': my_head['y']}
+
+    move_locations = get_adj_spaces(my_head)
+    print(move_locations)
+
+    #  ----- DATA CONSTANTS (Won't be modified) ----- 
+
+    # Adjacent spaces
+
+    # global adj_spaces
+    # adj_spaces = {'up':adj_up, 'left':adj_left, 'down':adj_down, 'right': adj_right}
+    # global my_adj_spaces
+    # my_adj_spaces = get_adj_squares("my_head")
+    # print(my_adj_spaces)
+
+    # My snake length
+    global my_length
+    my_length = data["you"]["length"]
+
+    # ----- END DATA CONSTANTS ------
+
     # ----- END VARIABLES FROM DATA -----
 
 
@@ -176,11 +228,11 @@ def choose_move(data: dict) -> str:
 
     # TODO Using information from 'data', don't let your Battlesnake pick a move that would hit its own body
 
-    possible_moves = dont_hit_body(my_head, my_body, possible_moves)
+    possible_moves = dont_hit_body(my_body, possible_moves)
 
     # TODO: Using information from 'data', don't let your Battlesnake pick a move that would collide with another Battlesnake
 
-    possible_moves = avoid_snake_bodies(my_head, other_snakes, possible_moves)
+    possible_moves = avoid_snake_bodies(other_snakes, possible_moves)
 
     # TODO: Using information from 'data', make your Battlesnake move towards a piece of food on the board
 
@@ -188,29 +240,81 @@ def choose_move(data: dict) -> str:
     move = random.choice(possible_moves)
     # TODO: Explore new strategies for picking a move that are better than random
 
-    print(f"{data['game']['id']} MOVE {data['turn']}: {move} picked from all valid options in {possible_moves}")
+    #print(f"{data['game']['id']} MOVE {data['turn']}: {move} picked from all valid options in {possible_moves}")
 
     return move
 
 # ----- END MAIN FUNCTIONS TO CALL OTHER FUNCTIONS -----
 
 
-# EXAMPLE DATA
-# {'game': {'id': '694cfabe-22d0-4eb5-b466-c21cb5ae63a8', 'ruleset': {'name': 'solo', 'version': 'v1.0.17'}, 'timeout': 500}, 'turn': 11, 'board': {'height': 11, 'width': 11, 'snakes': [{'id': 'gs_J6gKPMMrVRfXP8tjBDG66G4P', 'name': 'Snekky snek', 'latency': '256', 'health': 99, 'body': [{'x': 1, 'y': 0}, {'x': 1, 'y': 1}, {'x': 0, 'y': 1}, {'x': 0, 'y': 2}], 'head': {'x': 1, 'y': 0}, 'length': 4, 'shout': ''}], 'food': [{'x': 6, 'y': 2}, {'x': 5, 'y': 5}, {'x': 9, 'y': 6}, {'x': 10, 'y': 1}, {'x': 3, 'y': 9}, {'x': 2, 'y': 3}, {'x': 3, 'y': 5}], 'hazards': []}, 'you': {'id': 'gs_J6gKPMMrVRfXP8tjBDG66G4P', 'name': 'Snekky snek', 'latency': '256', 'health': 99, 'body': [{'x': 1, 'y': 0}, {'x': 1, 'y': 1}, {'x': 0, 'y': 1}, {'x': 0, 'y': 2}], 'head': {'x': 1, 'y': 0}, 'length': 4, 'shout': ''}}
-
-# Snakes:
-#  Snake1:
-   # {
-#   "id": "totally-unique-snake-id",
-#   "name": "Sneky McSnek Face",
-#   "health": 54,
-#   "body": [
-#     {"x": 0, "y": 0}, 
-#     {"x": 1, "y": 0}, 
-#     {"x": 2, "y": 0}
-#   ],
-#   "latency": "123",
-#   "head": {"x": 0, "y": 0},
-#   "length": 3,
-#   "shout": "why are we shouting??",
-#   "squad": "1"
+example_data = {
+  "game": {
+    "id": "game-00fe20da-94ad-11ea-bb37",
+    "ruleset": {
+      "name": "standard",
+      "version": "v.1.2.3"
+    },
+    "timeout": 500
+  },
+  "turn": 14,
+  "board": {
+    "height": 11,
+    "width": 11,
+    "food": [
+      {"x": 5, "y": 5}, 
+      {"x": 9, "y": 0}, 
+      {"x": 2, "y": 6}
+    ],
+    "hazards": [
+      {"x": 3, "y": 2}
+    ],
+    "snakes": [
+      {
+        "id": "snake-508e96ac-94ad-11ea-bb37",
+        "name": "My Snake",
+        "health": 54,
+        "body": [
+          {"x": 0, "y": 0}, 
+          {"x": 1, "y": 0}, 
+          {"x": 2, "y": 0}
+        ],
+        "latency": "111",
+        "head": {"x": 0, "y": 0},
+        "length": 3,
+        "shout": "why are we shouting??",
+        "squad": ""
+      }, 
+      {
+        "id": "snake-b67f4906-94ae-11ea-bb37",
+        "name": "Another Snake",
+        "health": 16,
+        "body": [
+          {"x": 5, "y": 4}, 
+          {"x": 5, "y": 3}, 
+          {"x": 6, "y": 3},
+          {"x": 6, "y": 2}
+        ],
+        "latency": "222",
+        "head": {"x": 5, "y": 4},
+        "length": 4,
+        "shout": "I'm not really sure...",
+        "squad": ""
+      }
+    ]
+  },
+  "you": {
+    "id": "snake-508e96ac-94ad-11ea-bb37",
+    "name": "My Snake",
+    "health": 54,
+    "body": [
+      {"x": 0, "y": 0}, 
+      {"x": 1, "y": 0}, 
+      {"x": 2, "y": 0}
+    ],
+    "latency": "111",
+    "head": {"x": 0, "y": 0},
+    "length": 3,
+    "shout": "why are we shouting??",
+    "squad": ""
+  }
+}
