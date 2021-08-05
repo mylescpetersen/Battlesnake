@@ -1,10 +1,11 @@
 import random
 from typing import List, Dict
 
-
 # MY IMPORTS 
-import Snake
-import Board
+import snake
+import board
+
+
 
 """
 This file can be a nice home for your move logic, and to write helper functions.
@@ -45,12 +46,12 @@ def choose_move(data: dict) -> str:
     # (self, health, body, head, length,  squad)
 
     # My snake
-    my_snake = Snake(my_id, my_name, my_health, my_body, my_head, my_length, my_squad)
+    my_snake = snake.Snake(my_id, my_name, my_health, my_body, my_head, my_length, my_squad)
 
     # All other snakes' instances in list []
     snakes = []
     for snake in data["board"]["snakes"]:
-      cur_snake = Snake(snake["id"], snake["name"], snake["health"], snake["body"], snake["head"], snake["length"], snake["shout"], snake["squad"])
+      cur_snake = snake.Snake(snake["id"], snake["name"], snake["health"], snake["body"], snake["head"], snake["length"], snake["shout"], snake["squad"])
     
       snakes.append(cur_snake)
 

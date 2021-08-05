@@ -1,5 +1,5 @@
-from server_logic import avoid_snake_bodies
-from Board import Board
+
+from board import Board
 import random
 
 

@@ -3,4 +3,11 @@
 .cmd
 .idea
 .vscode
-/venv/
+README.md
+Procfile
+app.yaml
+env/
+__pycache__/
+requirements.txt
+CODE_OF_CONDUCT.md
+runtime.txt
