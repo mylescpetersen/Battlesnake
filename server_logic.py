@@ -2,8 +2,8 @@ import random
 from typing import List, Dict
 
 # MY IMPORTS 
-import snake
-import board
+from snake import Snake
+from board import Board
 
 
 
@@ -13,7 +13,8 @@ This file can be a nice home for your move logic, and to write helper functions.
 We have started this for you, with a function to help remove the 'neck' direction
 from the list of possible moves!
 """
-
+# My Imports
+import snake
 
 
 # ----- MAIN FUNCTIONS TO CALL OTHER FUNCTIONS -----
@@ -46,7 +47,7 @@ def choose_move(data: dict) -> str:
     # (self, health, body, head, length,  squad)
 
     # My snake
-    my_snake = snake.Snake(my_id, my_name, my_health, my_body, my_head, my_length, my_squad)
+    my_snake = Snake(my_id, my_name, my_health, my_body, my_head, my_length, my_squad)
 
     # All other snakes' instances in list []
     snakes = []

@@ -16,7 +16,7 @@ class Snake():
 
     self.possible_moves = ["up", "down", "left", "right"]
 
-  # ----- ILLEDGAL MOVES -----
+  # ----- ILLEGAL MOVES -----
 
   def remove_illegal_moves(self, other_snakes):
     self.stay_in_bounds()

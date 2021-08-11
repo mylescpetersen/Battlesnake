@@ -4,7 +4,6 @@
 .idea
 .vscode
 README.md
-Procfile
 app.yaml
 env/
 __pycache__/
