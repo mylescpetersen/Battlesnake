@@ -1,7 +1,7 @@
 class Board():
-  def __init__(self, height, width, food, hazards, turn):
+  def __init__(self, height, width, food, hazards, snakes):
       self.height = height
       self.width = width
       self.food = food
       self.hazards = hazards
-      self.turn = turn
+      self.snakes = snakes

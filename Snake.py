@@ -1,10 +1,10 @@
 
-from board import Board
+from Board import Board
 import random
 
 
 class Snake():
-  def __init__(self, id, name, health, body, head, length, shout, squad):
+  def __init__(self, id, name, health, body, head, length, shout, board):
     self.id = id
     self.name = name
     self.health = health
@@ -12,21 +12,22 @@ class Snake():
     self.head = head
     self.length = length
     self.shout = shout
-    self.squad = squad
+    #self.squad = squad
+    self.board = board
 
     self.possible_moves = ["up", "down", "left", "right"]
 
-  # ----- ILLEGAL MOVES -----
+  # ----- ILLEDGAL MOVES -----
 
   def remove_illegal_moves(self, other_snakes):
-    self.stay_in_bounds()
+    self.stay_in_bounds(self.board)
     self.dont_hit_body()
     # TODO: avoid other snakes
     self.avoid_snake_bodies(other_snakes)
     self.avoid_snake_heads(other_snakes)
 
 
-
+    print(self.possible_moves)
     return
 
 
@@ -47,6 +48,8 @@ class Snake():
         self.remove_move("right")
     if self.head["y"] == board.height - 1:
         self.remove_move("up")
+
+    print(self.possible_moves)
     return
 
   # Don't hit your own body
@@ -56,6 +59,8 @@ class Snake():
         for direction, space in self.get_adj_spaces().items():
           if space == coord:
             self.remove_move(direction)
+
+      print(self.possible_moves)
       return
 
   # Prevent moving into another snakes body
@@ -68,6 +73,8 @@ class Snake():
        for direction, space in self.get_adj_spaces().items():
           if space == body_coord:
             self.remove_move(direction)
+
+    print(self.possible_moves)
     return
 
 
@@ -84,6 +91,8 @@ class Snake():
             if my_space == other_space:
               self.remove_move(my_direction)
               # TODO GET OTHER SNAKE HEAD'S ADJ SQUARES
+
+              print(self.possible_moves)
               return
 
 

@@ -2,8 +2,8 @@ import random
 from typing import List, Dict
 
 # MY IMPORTS 
-from snake import Snake
-from board import Board
+from Snake import Snake
+from Board import Board
 
 
 
@@ -13,8 +13,7 @@ This file can be a nice home for your move logic, and to write helper functions.
 We have started this for you, with a function to help remove the 'neck' direction
 from the list of possible moves!
 """
-# My Imports
-import snake
+
 
 
 # ----- MAIN FUNCTIONS TO CALL OTHER FUNCTIONS -----
@@ -33,26 +32,40 @@ def choose_move(data: dict) -> str:
     
     """
 
+
+    # Board vars
+    board_height = data["board"]["height"]
+    board_width = data["board"]["width"]
+    board_food = data["board"]["food"]
+    board_hazards = data["board"]["hazards"]
+    board_snakes = data["board"]["snakes"]
+
+    board = Board(board_height, board_width, board_food, board_hazards, board_snakes)
+
+
+
+
     # My snake variables
     my_id = data["you"]["id"]
     my_name = "Me"
     my_health = data["you"]["health"]
     my_length = data["you"]["length"]
+    my_shout = data["you"]["shout"]
 
     my_head = data["you"]["head"]  # A dictionary of x/y coordinates like {"x": 0, "y": 0}
     my_body = data["you"]["body"]  # A list of x/y coordinate dictionaries like [ {"x": 0, "y": 0}, {"x": 1, "y": 0}, {"x": 2, "y": 0} ]
-    my_squad = data["you"]["squad"]
+    #my_squad = data["you"]["squad"]
 
     # Create Snake object
     # (self, health, body, head, length,  squad)
 
     # My snake
-    my_snake = Snake(my_id, my_name, my_health, my_body, my_head, my_length, my_squad)
+    my_snake = Snake(my_id, my_name, my_health, my_body, my_head, my_length, my_shout, board)
 
     # All other snakes' instances in list []
     snakes = []
-    for snake in data["board"]["snakes"]:
-      cur_snake = snake.Snake(snake["id"], snake["name"], snake["health"], snake["body"], snake["head"], snake["length"], snake["shout"], snake["squad"])
+    for snake in board.snakes:
+      cur_snake = Snake(snake["id"], snake["name"], snake["health"], snake["body"], snake["head"], snake["length"], snake["shout"], board)
     
       snakes.append(cur_snake)
 
