@@ -17,7 +17,7 @@ class Snake():
 
     self.possible_moves = ["up", "down", "left", "right"]
 
-  # ----- ILLEDGAL MOVES -----
+  # ----- ILLEGAL MOVES -----
 
   def remove_illegal_moves(self, other_snakes):
     self.stay_in_bounds(self.board)
@@ -26,8 +26,6 @@ class Snake():
     self.avoid_snake_bodies(other_snakes)
     self.avoid_snake_heads(other_snakes)
 
-
-    print(self.possible_moves)
     return
 
 
@@ -49,7 +47,7 @@ class Snake():
     if self.head["y"] == board.height - 1:
         self.remove_move("up")
 
-    print(self.possible_moves)
+
     return
 
   # Don't hit your own body
@@ -60,7 +58,6 @@ class Snake():
           if space == coord:
             self.remove_move(direction)
 
-      print(self.possible_moves)
       return
 
   # Prevent moving into another snakes body
@@ -73,8 +70,6 @@ class Snake():
        for direction, space in self.get_adj_spaces().items():
           if space == body_coord:
             self.remove_move(direction)
-
-    print(self.possible_moves)
     return
 
 
@@ -92,7 +87,6 @@ class Snake():
               self.remove_move(my_direction)
               # TODO GET OTHER SNAKE HEAD'S ADJ SQUARES
 
-              print(self.possible_moves)
               return
 
 
@@ -105,7 +99,7 @@ class Snake():
   # Returns list in the form of [up,down,left,right]
   # With {x:_ , y:_} at each index
   def get_adj_spaces(self):
-    adj_up = {'x' :self.head, 'y': self.head['y'] + 1}
+    adj_up = {'x': self.head['x'], 'y': self.head['y'] + 1}
     adj_down = {'x': self.head['x'], 'y': self.head['y'] - 1}
     adj_left = {'x': self.head['x'] - 1, 'y': self.head['y']}
     adj_right = {'x': self.head['x'] + 1, 'y': self.head['y']}
@@ -116,7 +110,11 @@ class Snake():
 
 
   def pick_move(self):
+
+    print(self.possible_moves)
     move = random.choice(self.possible_moves)
+    print("My move: " + move)
+    print()
     return move
     
   # ----- END MISC METHODS -----   
