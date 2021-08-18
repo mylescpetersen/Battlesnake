@@ -32,7 +32,6 @@ def choose_move(data: dict) -> str:
     
     """
 
-
     # Board vars
     board_height = data["board"]["height"]
     board_width = data["board"]["width"]
@@ -40,9 +39,11 @@ def choose_move(data: dict) -> str:
     board_hazards = data["board"]["hazards"]
     board_snakes = data["board"]["snakes"]
 
+    current_turn = data["turn"]
+    print(current_turn)
+
+    # Make new Board instance
     board = Board(board_height, board_width, board_food, board_hazards, board_snakes)
-
-
 
 
     # My snake variables
@@ -72,6 +73,7 @@ def choose_move(data: dict) -> str:
 
     # Remove all illegal moves for this turn
     my_snake.remove_illegal_moves(snakes)
+    my_snake.determine_next_move(snakes)
     
 
     # TODO: Snake decision making 

@@ -1,5 +1,7 @@
 
 from Board import Board
+from misc_functions import *
+from constants import *
 import random
 
 
@@ -17,7 +19,15 @@ class Snake():
 
     self.possible_moves = ["up", "down", "left", "right"]
 
-  # ----- ILLEGAL MOVES -----
+
+
+  # ----- USEFUL VARIABLES -----
+  
+
+
+ # ----- END USEFUL VARIABLES -----
+
+  # ----- CALL MOVE FUNCTIONS -----
 
   def remove_illegal_moves(self, other_snakes):
     self.stay_in_bounds(self.board)
@@ -28,11 +38,42 @@ class Snake():
 
     return
 
+  def determine_next_move(self, other_snakes):
+    self.get_food()
+
+    return
+
+  # ----- END CALL MOVE FUNCTIONS -----
+
+
+  # ----- LOCATION CHOICE ------
+  def get_food(self):
+    for direction, space in get_adj_spaces(self.head).items():
+      for food_space in self.board.food:
+        # print(space == food_space)
+        if ( (space == food_space) ):#and (CHECK IF BIGGER SNAKE IS GONNA NOT GET IT) )
+          # TODO ADD ALL GOBBLE SQUARES TO LIST THEN RANDOM THAT LIST
+          print("GOBBLE", direction)
+          self.make_move(direction)
+    return
+
+
+  # TODO def find_nearest_food(self):
+
+  # ----- END LOCATION CHOICE -----
 
   # Removes move if it is still valid
   def remove_move(self, move: str):
     if move in self.possible_moves:
       self.possible_moves.remove(move)
+
+  # Removes all possible moves except the one passed
+  def make_move(self, move: str):
+    if move in self.possible_moves:
+      for cur_dir in DIRECTIONS:
+        if cur_dir != move:
+          self.remove_move(cur_dir)
+    return
 
 
   # Don't go out of bounds
@@ -46,15 +87,13 @@ class Snake():
         self.remove_move("right")
     if self.head["y"] == board.height - 1:
         self.remove_move("up")
-
-
     return
 
   # Don't hit your own body
   def dont_hit_body(self):
       for coord in self.body:
         # Only 4 elements
-        for direction, space in self.get_adj_spaces().items():
+        for direction, space in get_adj_spaces(self.head).items():
           if space == coord:
             self.remove_move(direction)
 
@@ -67,7 +106,7 @@ class Snake():
       for body_coord in cur_snake.body:
         # Only 4 elements
         # TODO: FIX DIECTION, SPACE TO COORD
-       for direction, space in self.get_adj_spaces().items():
+       for direction, space in get_adj_spaces(self.head).items():
           if space == body_coord:
             self.remove_move(direction)
     return
@@ -77,15 +116,14 @@ class Snake():
   # IF TIE, GO TO BIGGER SNAKE (FOOD IS ADDED BEFORE COLLISION)
     for snake in other_snakes:
       if self.length < snake.length:
-        my_adj_squares = self.get_adj_spaces()
-        snakes_adj_squares = snake.get_adj_spaces()
+        my_adj_squares = get_adj_spaces(self.head)
+        snakes_adj_squares = get_adj_spaces(self.head)
 
         for my_direction, my_space in my_adj_squares.items():
-          for other_space in snakes_adj_squares().values():
+          for other_space in snakes_adj_squares.values():
 
             if my_space == other_space:
               self.remove_move(my_direction)
-              # TODO GET OTHER SNAKE HEAD'S ADJ SQUARES
 
               return
 
@@ -98,16 +136,20 @@ class Snake():
   # Get adjacent spaces to the snake's head
   # Returns list in the form of [up,down,left,right]
   # With {x:_ , y:_} at each index
-  def get_adj_spaces(self):
-    adj_up = {'x': self.head['x'], 'y': self.head['y'] + 1}
-    adj_down = {'x': self.head['x'], 'y': self.head['y'] - 1}
-    adj_left = {'x': self.head['x'] - 1, 'y': self.head['y']}
-    adj_right = {'x': self.head['x'] + 1, 'y': self.head['y']}
 
-    adj_squares = {"up": adj_up, "down": adj_down, "left": adj_left, "right": adj_right}
+  # TODO CONVERT TO ANY SPACE
+  # def get_adj_spaces(self):
+  #   adj_up = {'x': self.head['x'], 'y': self.head['y'] + 1}
+  #   adj_down = {'x': self.head['x'], 'y': self.head['y'] - 1}
+  #   adj_left = {'x': self.head['x'] - 1, 'y': self.head['y']}
+  #   adj_right = {'x': self.head['x'] + 1, 'y': self.head['y']}
 
-    return adj_squares
+  #   adj_squares = {"up": adj_up, "down": adj_down, "left": adj_left, "right": adj_right}
 
+  #   return adj_squares
+
+
+  
 
   def pick_move(self):
 
@@ -120,6 +162,7 @@ class Snake():
   # ----- END MISC METHODS -----   
 
   
+
 
   
     
